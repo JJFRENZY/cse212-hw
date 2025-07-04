@@ -1,65 +1,77 @@
-﻿using System.Diagnostics;
+﻿using System;
 
-public static class Search {
-    public static void Run() {
-        Console.WriteLine("{0,15}{1,15}{2,15}{3,15}{4,15}", "n", "sort1-count", "sort2-count", "sort1-time",
-            "sort2-time");
-        Console.WriteLine("{0,15}{0,15}{0,15}{0,15}{0,15}", "----------");
-
-        for (int n = 0; n <= 25000; n += 1000) {
-            var testData = Enumerable.Range(0, n).ToArray();
-            int count1 = SearchSorted1(testData, n);
-            int count2 = SearchSorted2(testData, n, 0, testData.Length - 1);
-            double time1 = Time(() => SearchSorted1(testData, n), 100);
-            double time2 = Time(() => SearchSorted2(testData, n, 0, testData.Length - 1), 100);
-            Console.WriteLine("{0,15}{1,15}{2,15}{3,15:0.00000}{4,15:0.00000}", n, count1, count2, time1, time2);
+public static class Search
+{
+    // Linear search on sorted list with early exit
+    public static int SearchSorted1(int[] sortedArray, int target, out int count)
+    {
+        count = 0;
+        for (int i = 0; i < sortedArray.Length; i++)
+        {
+            count++;
+            if (sortedArray[i] == target)
+                return i;
+            if (sortedArray[i] > target) // Early stop since sorted
+                break;
         }
+        return -1; // not found
     }
 
-    private static double Time(Action executeAlgorithm, int times) {
-        var sw = Stopwatch.StartNew();
-        for (var i = 0; i < times; ++i) {
-            executeAlgorithm();
-        }
+    // Binary search on sorted list
+    public static int SearchSorted2(int[] sortedArray, int target, out int count)
+    {
+        int low = 0;
+        int high = sortedArray.Length - 1;
+        count = 0;
 
-        sw.Stop();
-        return sw.Elapsed.TotalMilliseconds / times;
+        while (low <= high)
+        {
+            count++;
+            int mid = (low + high) / 2;
+            if (sortedArray[mid] == target)
+                return mid;
+            else if (sortedArray[mid] < target)
+                low = mid + 1;
+            else
+                high = mid - 1;
+        }
+        return -1; // not found
     }
 
-    /// <summary>
-    /// Search for 'target' in the list 'data'. When its found (or not found) the variable count which represents
-    /// the work done in the function is returned.
-    /// </summary>
-    /// <param name="data">The array of numbers</param>
-    /// <param name="target">The number we're looking for</param>
-    private static int SearchSorted1(int[] data, int target) {
-        var count = 0;
-        foreach (var item in data) {
-            count += 1;
-            if (item == target)
-                return count; // Found it
+    // Run test with timing and iteration count
+    public static void Run()
+    {
+        int n = 10000;
+        int[] data = new int[n];
+        for (int i = 0; i < n; i++)
+            data[i] = i * 2; // Even numbers, sorted
+
+        int target = -1; // Target not in array to simulate worst case
+
+        // Run SearchSorted1 100 times
+        int totalCount1 = 0;
+        var watch1 = System.Diagnostics.Stopwatch.StartNew();
+        for (int i = 0; i < 100; i++)
+        {
+            SearchSorted1(data, target, out int count1);
+            totalCount1 = count1; // count same each run
         }
+        watch1.Stop();
 
-        return count; // Didn't find it
-    }
+        // Run SearchSorted2 100 times
+        int totalCount2 = 0;
+        var watch2 = System.Diagnostics.Stopwatch.StartNew();
+        for (int i = 0; i < 100; i++)
+        {
+            SearchSorted2(data, target, out int count2);
+            totalCount2 = count2; // count same each run
+        }
+        watch2.Stop();
 
-    /// <summary>
-    /// Search for 'target' in the list 'data'. When its found (or not found) the variable count which represents
-    /// the work done in the function is returned.
-    /// </summary>
-    /// <param name="data">The array of numbers</param>
-    /// <param name="target">The number we're looking for</param>
-    /// <param name="start">The index of the starting section of the data to look in</param>
-    /// <param name="end">The index of the ending section of the data to look in</param>
-    private static int SearchSorted2(int[] data, int target, int start, int end) {
-        if (end < start)
-            return 1; // All done
-        var middle = (end + start) / 2;
-        if (data[middle] == target)
-            return 1; // Found it
-        if (data[middle] < target) // Search in the upper half after index middle
-            return 1 + SearchSorted2(data, target, middle + 1, end);
-        // Search in the lower half before index middle
-        return 1 + SearchSorted2(data, target, start, middle - 1);
+        Console.WriteLine($"n = {n}");
+        Console.WriteLine($"SearchSorted1 count (iterations): {totalCount1}");
+        Console.WriteLine($"SearchSorted1 avg time (ms): {watch1.ElapsedMilliseconds / 100.0}");
+        Console.WriteLine($"SearchSorted2 count (iterations): {totalCount2}");
+        Console.WriteLine($"SearchSorted2 avg time (ms): {watch2.ElapsedMilliseconds / 100.0}");
     }
 }
