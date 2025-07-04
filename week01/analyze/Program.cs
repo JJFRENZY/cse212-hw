@@ -1,8 +1,12 @@
-﻿Console.WriteLine("\n======================\nSorting\n======================");
-Sorting.Run();
+﻿using System;
 
-Console.WriteLine("\n======================\nStandardDeviation\n======================");
-StandardDeviation.Run();
+public class Program
+{
+    public static void Main()
+    {
+        Sorting.Run();
+        Console.WriteLine();
 
-Console.WriteLine("\n======================\nSearch\n======================");
-Search.Run();
+        StandardDeviation.Run();
+    }
+}

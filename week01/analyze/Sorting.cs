@@ -1,38 +1,28 @@
 ﻿using System;
 
-namespace Week01
+public static class Sorting
 {
-    public static class Sorting
+    public static void Run()
     {
-        /// <summary>
-        /// Sorts an integer array using the Bubble Sort algorithm.
-        /// </summary>
-        /// <param name="data">The array to sort</param>
-        public static void SortArray(int[] data)
-        {
-            for (var sortPos = data.Length - 1; sortPos >= 0; sortPos--)
-            {
-                for (var swapPos = 0; swapPos < sortPos; ++swapPos)
-                {
-                    if (data[swapPos] > data[swapPos + 1])
-                    {
-                        (data[swapPos + 1], data[swapPos]) = (data[swapPos], data[swapPos + 1]);
-                    }
-                }
-            }
-        }
+        int[] data = { 9, 3, 1, 5, 13, 12 };
+        Console.WriteLine("Before sort: " + string.Join(", ", data));
+        SortArray(data);
+        Console.WriteLine("After sort: " + string.Join(", ", data));
     }
 
-    class Program
+    public static void SortArray(int[] data)
     {
-        static void Main(string[] args)
+        for (var sortPos = data.Length - 1; sortPos >= 0; sortPos--)
         {
-            var numbers = new[] { 3, 2, 1, 6, 4, 9, 8 };
-
-            Sorting.SortArray(numbers);
-
-            Console.WriteLine("int[]{{{0}}}", string.Join(", ", numbers));
-            // Expected output: int[]{1, 2, 3, 4, 6, 8, 9}
+            for (var swapPos = 0; swapPos < sortPos; ++swapPos)
+            {
+                if (data[swapPos] > data[swapPos + 1])
+                {
+                    var temp = data[swapPos];
+                    data[swapPos] = data[swapPos + 1];
+                    data[swapPos + 1] = temp;
+                }
+            }
         }
     }
 }

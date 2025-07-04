@@ -69,11 +69,3 @@ public static class StandardDeviation
         return Math.Sqrt(variance);
     }
 }
-
-public class Program // ← NOTE: capital "P"
-{
-    public static void Main()
-    {
-        StandardDeviation.Run();
-    }
-}
