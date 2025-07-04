@@ -1,5 +1,5 @@
 # cse212-ww-student-template
-This is the starting repository for student work for CSE 212 at BYU-Idaho. It should be used as a template repository for each student to start their own repo.
+This is the starting repository for student work for CSE 212 at BYU-Idaho. It should be used as a template repository for each student to start their own repo(And I did -Jackson).
 
 # Permissions to use
 This code is used for class assignments for CSE 212 at Brigham Young University-Idaho. Copying this code is a violation of the BYU-Idaho Honor Code.
