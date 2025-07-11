@@ -11,33 +11,46 @@ public class TakingTurnsQueue_Tests
 
         queue.AddPerson("Alice", 2);
         queue.AddPerson("Bob", 1);
-        queue.AddPerson("Charlie", 0);
+        queue.AddPerson("Charlie", -1); // Infinite turns
 
-        // 1st person: Alice (turns 2)
-        var p1 = queue.GetNextPerson();
-        Assert.AreEqual("Alice", p1.Name);
-        Assert.AreEqual(1, p1.Turns);
-
-        // 2nd person: Bob (turns 1, no re-enqueue)
-        var p2 = queue.GetNextPerson();
-        Assert.AreEqual("Bob", p2.Name);
-        Assert.AreEqual(1, p2.Turns); // turns still 1 since we return before decrementing?
-
-        // 3rd person: Charlie (infinite turns)
-        var p3 = queue.GetNextPerson();
-        Assert.AreEqual("Charlie", p3.Name);
-        Assert.AreEqual(0, p3.Turns);
-
-        // 4th person: Alice again (turns now 1, after decrement)
-        var p4 = queue.GetNextPerson();
-        Assert.AreEqual("Alice", p4.Name);
-        Assert.AreEqual(0, p4.Turns);
+        Assert.AreEqual("Alice", queue.GetNextPerson().Name);   // Alice (1 left)
+        Assert.AreEqual("Bob", queue.GetNextPerson().Name);     // Bob (0 left)
+        Assert.AreEqual("Charlie", queue.GetNextPerson().Name); // Charlie
+        Assert.AreEqual("Alice", queue.GetNextPerson().Name);   // Alice (0 left)
+        Assert.AreEqual("Charlie", queue.GetNextPerson().Name); // Charlie
+        Assert.AreEqual("Charlie", queue.GetNextPerson().Name); // Charlie
     }
 
     [TestMethod]
+    [ExpectedException(typeof(InvalidOperationException))]
     public void TestGetNextPerson_EmptyQueueThrows()
     {
         var queue = new TakingTurnsQueue();
+        queue.GetNextPerson(); // Should throw
+    }
+
+    [TestMethod]
+    public void TestInfiniteTurns()
+    {
+        var queue = new TakingTurnsQueue();
+
+        queue.AddPerson("Eve", -1); // Infinite
+        Assert.AreEqual("Eve", queue.GetNextPerson().Name);
+        Assert.AreEqual("Eve", queue.GetNextPerson().Name);
+        Assert.AreEqual("Eve", queue.GetNextPerson().Name);
+    }
+
+    [TestMethod]
+    public void TestFinitePeopleRemoved()
+    {
+        var queue = new TakingTurnsQueue();
+
+        queue.AddPerson("Tom", 1);
+        queue.AddPerson("Jerry", 2);
+
+        Assert.AreEqual("Tom", queue.GetNextPerson().Name);    // Tom removed (0)
+        Assert.AreEqual("Jerry", queue.GetNextPerson().Name);  // Jerry (1)
+        Assert.AreEqual("Jerry", queue.GetNextPerson().Name);  // Jerry (0)
 
         Assert.ThrowsException<InvalidOperationException>(() => queue.GetNextPerson());
     }
