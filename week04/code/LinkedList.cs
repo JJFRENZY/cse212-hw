@@ -3,18 +3,6 @@ using System.Collections.Generic;
 
 public class LinkedList
 {
-    private class Node
-    {
-        public int Value;
-        public Node? Next;
-        public Node? Prev;
-
-        public Node(int value)
-        {
-            Value = value;
-        }
-    }
-
     private Node? head;
     private Node? tail;
 
@@ -84,7 +72,7 @@ public class LinkedList
     {
         for (var curr = head; curr != null; curr = curr.Next)
         {
-            if (curr.Value == target)
+            if (curr.Data == target)
             {
                 var node = new Node(value)
                 {
@@ -107,7 +95,7 @@ public class LinkedList
     {
         for (var curr = head; curr != null; curr = curr.Next)
         {
-            if (curr.Value == value)
+            if (curr.Data == value)
             {
                 if (curr == head)
                 {
@@ -122,7 +110,7 @@ public class LinkedList
                     curr.Prev!.Next = curr.Next;
                     curr.Next!.Prev = curr.Prev;
                 }
-                break; // Remove only first match
+                break;
             }
         }
     }
@@ -131,9 +119,9 @@ public class LinkedList
     {
         for (var curr = head; curr != null; curr = curr.Next)
         {
-            if (curr.Value == oldValue)
+            if (curr.Data == oldValue)
             {
-                curr.Value = newValue;
+                curr.Data = newValue;
             }
         }
     }
@@ -142,7 +130,7 @@ public class LinkedList
     {
         for (var curr = tail; curr != null; curr = curr.Prev)
         {
-            yield return curr.Value;
+            yield return curr.Data;
         }
     }
 
@@ -156,7 +144,7 @@ public class LinkedList
 
         for (var curr = head; curr != null; curr = curr.Next)
         {
-            result.Add(curr.Value);
+            result.Add(curr.Data);
         }
 
         return $"<LinkedList>{{{string.Join(", ", result)}}}";

@@ -1,6 +1,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
+using System.Linq;
 
-// DO NOT MODIFY THIS FILE
+// DO NOT MODIFY THE TESTS ABOVE THIS LINE
 
 [TestClass]
 public class InsertTailTests
@@ -9,7 +11,6 @@ public class InsertTailTests
     public void InsertTail_Empty()
     {
         var ll = new LinkedList();
-
         Assert.IsTrue(ll.HeadAndTailAreNull());
         ll.InsertTail(1);
         Assert.IsTrue(ll.HeadAndTailAreNotNull());
@@ -20,7 +21,6 @@ public class InsertTailTests
     public void InsertTail_Basic()
     {
         var ll = new LinkedList();
-
         ll.InsertTail(1);
         ll.InsertHead(2);
         ll.InsertHead(2);
@@ -28,12 +28,10 @@ public class InsertTailTests
         ll.InsertHead(3);
         ll.InsertHead(4);
         ll.InsertHead(5);
-
         Assert.AreEqual("<LinkedList>{5, 4, 3, 2, 2, 2, 1}", ll.ToString());
 
         ll.InsertTail(0);
         ll.InsertTail(-1);
-
         Assert.AreEqual("<LinkedList>{5, 4, 3, 2, 2, 2, 1, 0, -1}", ll.ToString());
     }
 }
@@ -45,7 +43,6 @@ public class RemoveTailTests
     public void RemoveTail_Empty()
     {
         var ll = new LinkedList();
-
         ll.RemoveTail();
         Assert.IsTrue(ll.HeadAndTailAreNull());
         Assert.AreEqual("<LinkedList>{}", ll.ToString());
@@ -55,7 +52,6 @@ public class RemoveTailTests
     public void RemoveTail_Single()
     {
         var ll = new LinkedList();
-
         ll.InsertHead(1);
         ll.RemoveTail();
         Assert.IsTrue(ll.HeadAndTailAreNull());
@@ -66,7 +62,6 @@ public class RemoveTailTests
     public void RemoveTail_Basic()
     {
         var ll = new LinkedList();
-
         ll.InsertHead(2);
         ll.InsertHead(2);
         ll.InsertHead(2);
@@ -89,7 +84,6 @@ public class RemoveTests
     public void Remove_NonExistant()
     {
         var ll = new LinkedList();
-
         ll.InsertHead(2);
         ll.InsertHead(2);
         ll.InsertHead(2);
@@ -128,14 +122,12 @@ public class RemoveTests
     public void Remove_Multiple()
     {
         var ll = new LinkedList();
-
         ll.InsertHead(2);
         ll.InsertHead(2);
         ll.InsertHead(3);
         ll.InsertHead(4);
         ll.InsertHead(2);
         ll.InsertHead(5);
-
         ll.InsertAfter(3, 35);
         ll.InsertAfter(5, 6);
 
@@ -160,7 +152,6 @@ public class ReplaceTests
     public void Replace_NonExistant()
     {
         var ll = new LinkedList();
-
         ll.InsertHead(2);
         ll.InsertHead(2);
         ll.InsertHead(3);
@@ -176,7 +167,6 @@ public class ReplaceTests
     public void Replace_Empty()
     {
         var ll = new LinkedList();
-
         ll.Replace(-1, 4);
         Assert.AreEqual("<LinkedList>{}", ll.ToString());
     }
@@ -185,7 +175,6 @@ public class ReplaceTests
     public void Replace_Multiple()
     {
         var ll = new LinkedList();
-
         ll.InsertHead(2);
         ll.InsertHead(2);
         ll.InsertHead(3);
@@ -230,5 +219,14 @@ public class ReverseTests
         ll.InsertHead(2);
         ll.InsertHead(5);
         Assert.AreEqual("<IEnumerable>{2, 2, 3, 4, 2, 5}", ll.Reverse().AsString());
+    }
+}
+
+// Extension method to support AsString() in tests
+public static class TestHelpers
+{
+    public static string AsString(this IEnumerable<int> source)
+    {
+        return $"<IEnumerable>{{{string.Join(", ", source)}}}";
     }
 }
