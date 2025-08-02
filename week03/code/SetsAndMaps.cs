@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
+using System.Text.Json;
 
 public class SetsAndMaps
 {
@@ -13,7 +15,7 @@ public class SetsAndMaps
 
         foreach (var word in words)
         {
-            if (word[0] == word[1]) // Skip words like "aa"
+            if (word.Length != 2 || word[0] == word[1])
                 continue;
 
             string reversed = new string(new char[] { word[1], word[0] });
@@ -84,5 +86,33 @@ public class SetsAndMaps
         }
 
         return true;
+    }
+
+    // 5. EarthquakeDailySummary: Fetch USGS earthquake data and summarize location and magnitude
+    public static List<string> EarthquakeDailySummary()
+    {
+        var results = new List<string>();
+
+        using (HttpClient client = new HttpClient())
+        {
+            var response = client.GetStringAsync("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson").Result;
+            var data = JsonSerializer.Deserialize<FeatureCollection>(response);
+
+            if (data?.Features != null)
+            {
+                foreach (var feature in data.Features)
+                {
+                    var place = feature.Properties.Place;
+                    var mag = feature.Properties.Magnitude;
+
+                    if (!string.IsNullOrWhiteSpace(place) && mag.HasValue)
+                    {
+                        results.Add($"{place} - Mag {mag.Value}");
+                    }
+                }
+            }
+        }
+
+        return results;
     }
 }
