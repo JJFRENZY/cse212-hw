@@ -9,13 +9,13 @@ public class Node
         this.Data = data;
     }
 
+    // Problem 1: Insert unique values only
     public void Insert(int value)
     {
-        // TODO Start Problem 1
+        if (value == Data) return; // ignore duplicates
 
         if (value < Data)
         {
-            // Insert to the left
             if (Left is null)
                 Left = new Node(value);
             else
@@ -23,7 +23,6 @@ public class Node
         }
         else
         {
-            // Insert to the right
             if (Right is null)
                 Right = new Node(value);
             else
@@ -31,15 +30,19 @@ public class Node
         }
     }
 
+    // Problem 2: Contains (recursive)
     public bool Contains(int value)
     {
-        // TODO Start Problem 2
-        return false;
+        if (value == Data) return true;
+        if (value < Data)  return Left != null && Left.Contains(value);
+        return Right != null && Right.Contains(value);
     }
 
+    // Problem 4: GetHeight
     public int GetHeight()
     {
-        // TODO Start Problem 4
-        return 0; // Replace this line with the correct return statement(s)
+        int leftH  = Left  == null ? 0 : Left.GetHeight();
+        int rightH = Right == null ? 0 : Right.GetHeight();
+        return 1 + System.Math.Max(leftH, rightH);
     }
 }
